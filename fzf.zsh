@@ -62,7 +62,7 @@ fkill() {
 fbr() {
   local branches branch
   local query=$1
-  local opts="--cycle +m -e --color=spinner:233,info:233 --select-1 --exit-0 --preview-window down:20"
+  local opts="--cycle +m -e --color=spinner:233,info:233 --select-1 --exit-0 --preview-window down:10 --height 50%"
   if ! [[ -z "${query// }" ]] ; then
       opts="$=opts -q ${query}"
   fi
