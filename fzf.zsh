@@ -68,11 +68,7 @@ fbr() {
 }
 
 alias sb=fbr
-# Quickly switch to main (if it exists) or master
+# Quickly switch to main or master
 sbm() {
-    if git for-each-ref --shell --format='%(refname)' refs/heads/ | grep -q main; then
-        fbr main
-    else
-        fbr master
-    fi
+    fbr `git branch -l main master | head -n 1 | cut -c3-`
 }
