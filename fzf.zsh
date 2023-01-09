@@ -30,45 +30,5 @@ export FZF_ALT_C_OPTS="$FZF_DEFAULT_OPTS --select-1 --exit-0"
 # the preview window. In the following example, we bind ? key for toggling the preview window.
 FZF_CTRL_R_OPTS="$FZF_DEFAULT_OPTS  --preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
 
-# fkill - kill processes - list only the ones you can kill. Modified the earlier script.
-#
-# Via https://github.com/junegunn/fzf/wiki/examples#processes
-#
-fkill() {
-    local pid
-    if [ "$UID" != "0" ]; then
-        pid=$(ps -f -u $UID | sed 1d | fzf --preview-window down:3:wrap -m | awk '{print $2}')
-    else
-        pid=$(ps -ef | sed 1d | fzf --preview-window down:3:wrap -m | awk '{print $2}')
-    fi
-
-    if [ "x$pid" != "x" ]
-    then
-        echo $pid | xargs kill -${1:-9}
-    fi
-}
-
-# fbr - checkout git branch
-#
-# Adapted from:
-#
-# https://github.com/junegunn/fzf/wiki/examples#git
-#
-#
-fbr() {
-  local branches branch
-  local query=$1
-  local opts="--cycle +m -e --color=spinner:233,info:233 --select-1 --exit-0 --preview-window down:10 --height 50%"
-  if ! [[ -z "${query// }" ]] ; then
-      opts="$=opts -q ${query}"
-  fi
-  branches=$(git branch) &&
-    branch=$(echo "$branches" | fzf "$=opts" --preview 'git --no-pager log --oneline --decorate --graph -n10 {1}') &&
-    git checkout $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
-}
-
+autoload -Uz fkill fbr sbm
 alias sb=fbr
-# Quickly switch to main or master
-sbm() {
-    fbr `git branch -l main master | head -n 1 | cut -c3-`
-}
