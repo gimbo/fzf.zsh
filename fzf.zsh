@@ -1,34 +1,63 @@
-# Setup fzf
-# ---------
+# fzf configuration
 
-# Auto-completion
-# ---------------
-#
-# I disable this because I use the zsh-autosuggestions zsh plugin
-# [[ $- == *i* ]] && source "$(brew --prefix)/opt/fzf/shell/completion.zsh" 2> /dev/null
+export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix'
+export FZF_DEFAULT_OPTS="\
+  --border=none
+  --color=hl:#f94e4e,hl+:#ffff00,gutter:-1
+  --info=inline-right
+  --layout=reverse
+  "
 
-# Key bindings
-# ------------
+# Quoting the docs: --select-1 automatically selects the item if there's only
+# one so that you don't have to press enter key.  Likewise, --exit-0
+# automatically exits when the list is empty.
+local fzf_singleton_opts="--select-1 --exit-0"
+
+
+
+# Key bindings for command-line
+
 source "$(brew --prefix)/opt/fzf/shell/key-bindings.zsh"
 
-export FZF_DEFAULT_COMMAND='fd --type f'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_ALT_C_COMMAND="fd -t d ."
+# Ctrl-T mode — paste selected items onto command line
+export FZF_CTRL_T_COMMAND="fd"
+export FZF_CTRL_T_OPTS="
+  $fzf_singleton_opts
+  --filepath-word
+  --preview='bat -n --color=always {}'
+  --bind='ctrl-/:change-preview-window(down|hidden|)'
+  "
 
-export FZF_DEFAULT_OPTS="--color=hl:#f94e4e,hl+:#ffff00 --height 40% --reverse"
+# Ctrl-R mode — history search
+export FZF_CTRL_R_OPTS="\
+  --height=~30%
+  --layout=default
+  --preview='echo {}'
+  --preview-window='right,50%,border-left,wrap,<60(down,10%,border-top,wrap)'
+  --bind='ctrl-/:toggle-preview'
+  --bind='ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
+  --header='⌃R relevance/chronological • ⌃Y to clipboard • ⌃/ preview'
+  --header-first
+  "
 
-# Quoting the docs:
-# --select-1 automatically selects the item if there's only one so that you don't have to press enter key.
-# Likewise, --exit-0 automatically exits when the list is empty.
-# These options are also useful in FZF_ALT_C_OPTS.
-export FZF_CTRL_T_OPTS="$FZF_DEFAULT_OPTS --select-1 --exit-0"
-export FZF_ALT_C_OPTS="$FZF_DEFAULT_OPTS --select-1 --exit-0"
+# Alt-C mode — cd into selected folder; probably prefer zoxide or Alfred.
+export FZF_ALT_C_COMMAND="fd --type d --strip-cwd-prefix"
+export FZF_ALT_C_OPTS="\
+  $fzf_singleton_opts
+  --filepath-word
+  --preview 'tree -C {}'
+  "
 
-# Quoting the docs:
 
-# Commands that are too long are not fully visible on screen. We can use --preview option to display the full command on
-# the preview window. In the following example, we bind ? key for toggling the preview window.
-FZF_CTRL_R_OPTS="$FZF_DEFAULT_OPTS  --preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
+
+# Fuzzy completion
+
+# I disable this as I prefer the Aloxaf/fzf-tab plugin
+# source "$(brew --prefix)/opt/fzf/shell/completion.zsh"
+
+
+
+# My fzf extras
 
 autoload -Uz fkill fbr sbm
 alias sb=fbr
