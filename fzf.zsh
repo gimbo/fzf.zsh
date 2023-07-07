@@ -40,12 +40,16 @@ export FZF_CTRL_R_OPTS="\
   --header-first
   "
 
-# Alt-C mode — cd into selected folder; probably prefer zoxide or Alfred.
-export FZF_ALT_C_COMMAND="fd --type d --strip-cwd-prefix"
+# Alt-C mode — cd into selected folder; probably prefer zoxide or just cd with
+# autocompletion.
+#
+# Bit of a behemoth, but this finds folders, ordered by depth then name
+export FZF_ALT_C_COMMAND='fd --type d --strip-cwd-prefix | awk -F'\''/'\'' '\''{ print NF, $0 }'\'' | sort -n | cut -d" " -f2-'
 export FZF_ALT_C_OPTS="\
   $fzf_singleton_opts
   --filepath-word
   --preview 'tree -C {}'
+  --no-sort
   "
 
 
