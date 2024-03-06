@@ -63,5 +63,4 @@ export FZF_ALT_C_OPTS="\
 
 # My fzf extras
 
-autoload -Uz fkill fbr sbm
-alias sb=fbr
+autoload -Uz fkill
