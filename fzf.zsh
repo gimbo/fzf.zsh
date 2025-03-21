@@ -63,5 +63,8 @@ export FZF_ALT_C_OPTS="\
 
 # My fzf extras
 
-autoload -Uz fkill fbr sbm
-alias sb=fbr
+autoload -Uz fkill
+
+# Deprecate sb/sbm in favour of gsw/gswm aliases defined elsewhere
+alias sb=gsw
+alias sbm=gswm
