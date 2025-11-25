@@ -1,4 +1,4 @@
-# fbr - checkout git branch
+# fbr - switch to git branch
 #
 # Adapted from:
 #
@@ -12,4 +12,4 @@ if ! [[ -z "${query// }" ]] ; then
 fi
 branches=$(git branch) &&
     branch=$(echo "$branches" | fzf "$=opts" --preview 'git --no-pager log --oneline --decorate --graph -n10 {1}') &&
-    git checkout $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
+    git switch $(echo "$branch" | awk '{print $1}' | sed "s/.* //")

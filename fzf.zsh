@@ -63,5 +63,6 @@ export FZF_ALT_C_OPTS="\
 
 # My fzf extras
 
-autoload -Uz fkill fbr sbm
+autoload -Uz fkill fbr
 alias sb=fbr
+alias sbm=gswm
